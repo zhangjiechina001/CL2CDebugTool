@@ -6,6 +6,8 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using CL2CDebugTool.Item;
 
 namespace CL2CDebugTool
 {
@@ -14,7 +16,8 @@ namespace CL2CDebugTool
         private IModbusMaster _modbus;
         private Socket _sock;
         private byte _slaveId = 1;
-        
+        private readonly ObservableCollection<StateItem> _stateItems=new ObservableCollection<StateItem>();
+
         public CL2CController() { }
 
         public bool ConnectToHost(string ip)
@@ -27,6 +30,8 @@ namespace CL2CDebugTool
             _modbus = factory.CreateMaster(_sock);
             return true;
         }
+
+        public ObservableCollection<StateItem> StateItems;
 
         public void Dispose()
         {
