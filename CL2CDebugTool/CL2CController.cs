@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using CL2CDebugTool.Item;
+using NModbus.Extensions.Enron;
 
 namespace CL2CDebugTool
 {
@@ -19,7 +20,7 @@ namespace CL2CDebugTool
         Zero
     }
 
-    public enum RetrunZeroDirection
+    public enum AxisDirection
     {
         Forward,
         Backward
@@ -37,7 +38,7 @@ namespace CL2CDebugTool
             _tcpClient = new TcpClient();
             List<string> names = new List<string>()
             {
-                "故障","使能","运行","无效","指令完成","路径完成","回零完成","当前报警"
+                "故障","使能","运行","无效","指令完成","路径完成","回零完成","当前报警","当前位置","当前速度"
             };
 
             foreach (string name in names)
@@ -61,10 +62,10 @@ namespace CL2CDebugTool
 
         public ObservableCollection<StateItem> StateItems => _stateItems;
 
-        public void ReturnToZero(RetrunZeroDirection direction, ReturnMode mode)
+        public void ReturnToZero(AxisDirection direction, ReturnMode mode)
         {
             bool[] bArr = new bool[7];
-            bArr[0] = direction == RetrunZeroDirection.Forward;
+            bArr[0] = direction == AxisDirection.Forward;
             bArr[2] = mode == ReturnMode.Zero;
             Convert.ToUInt16(bArr);
             _modbus.WriteSingleRegister(_slaveId,0x600A,GetNum(bArr));
@@ -78,15 +79,59 @@ namespace CL2CDebugTool
             _modbus.WriteSingleRegister(_slaveId, 0x6002, 0x21);
         }
 
+        public void SetVel(double vel)
+        {
+            _modbus.WriteSingleRegister(_slaveId, 0x6023, (ushort)(vel * 100));
+        }
+
+        public void RelativeMove(double relativeMove)
+        {
+            _modbus.WriteSingleRegister(_slaveId, 0x6200, 0x41);
+
+            int tempPos = (int)(relativeMove * 10000);
+            //写入位置
+            _modbus.WriteMultipleRegisters(_slaveId, 0x6201, ConvertToUint16List(tempPos).ToArray());
+            //启动
+            _modbus.WriteSingleRegister(_slaveId, 0x6002, 0x0010);
+        }
+
+        public void AbsoluteMove(double relativeMove)
+        {
+            _modbus.WriteSingleRegister(_slaveId, 0x6200, 0x01);
+
+            int tempPos = (int)(relativeMove * 10000);
+            //写入位置
+            _modbus.WriteMultipleRegisters(_slaveId, 0x6201, ConvertToUint16List(tempPos).ToArray());
+            //启动
+            _modbus.WriteSingleRegister(_slaveId, 0x6002, 0x0010);
+        }
+
+        public void SetLimit(AxisDirection direction,bool enable)
+        {
+            ushort limitAddr = (ushort)(direction == AxisDirection.Backward ? 0x145 : 0x147);
+            int value = direction == AxisDirection.Backward ? 0x25 : 0x26;
+            ushort writeVale = (ushort)(enable ? value : (value + 0x80));
+            Console.WriteLine($"limitAddr:{limitAddr} writeVale:{writeVale}");
+            _modbus.WriteSingleRegister(_slaveId,limitAddr, writeVale);
+        }
+
+        public void GetLimit(AxisDirection direction,ref bool enable)
+        {
+            ushort limitAddr = (ushort)(direction == AxisDirection.Backward ? 0x145 : 0x147);
+            int value = direction == AxisDirection.Backward ? 0x25 : 0x26;
+            ushort writeVale = (ushort)(enable ? value : (value + 0x80));
+            Console.WriteLine($"limitAddr:{limitAddr} writeVale:{writeVale}");
+            enable=(_modbus.ReadHoldingRegisters(_slaveId, limitAddr, writeVale).First()==value);
+        }
+
+
         public void Stop()
         {
             _modbus.WriteSingleRegister(_slaveId, 0x6002, 0x40);
         }
 
-
         public void UpdateState()
         {
-            
             ushort state=_modbus.ReadHoldingRegisters(_slaveId, 0x1003, 1).First();
             
             for (int i = 0; i < 7; i++)
@@ -96,14 +141,18 @@ namespace CL2CDebugTool
             }
             var error = _modbus.ReadHoldingRegisters(_slaveId, 0x2203, 1).First();
             _stateItems[7].State = error.ToString("X");
-            
+            var curPos = _modbus.ReadHoldingRegisters(_slaveId, 0x602c, 2);
+            _stateItems[8].State = $"{ConvertToInt(curPos) / 10000.0}" ;
+            var vel=_modbus.ReadHoldingRegisters(_slaveId, 0x6023, 1);
+            _stateItems[9].State = $"{vel[0] /100.0}";
         }
 
         public static bool GetBit(ushort b, int bitNumber)
         {
             if (bitNumber < 1 || bitNumber > 16)
+            {
                 throw new ArgumentOutOfRangeException("bitNumber", "Must be 1 - 16");
-
+            }
             return (b & (1 << (bitNumber - 1))) >= 1;
         }
 
@@ -119,6 +168,20 @@ namespace CL2CDebugTool
                     result |= (ushort)(1 << i);
                 }
             }
+            return result;
+        }
+
+        public static int ConvertToInt(ushort[] data)
+        {
+            int data0 = data[0];
+            return data0 << 16 + data[1];
+        }
+
+        List<ushort> ConvertToUint16List(int data)
+        {
+            List<ushort> result = new List<ushort>();
+            result.Add((ushort)(data >> 16));
+            result.Add((ushort)(data & 0xFFFF));
             return result;
         }
 

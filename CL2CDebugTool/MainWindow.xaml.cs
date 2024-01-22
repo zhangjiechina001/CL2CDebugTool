@@ -33,6 +33,7 @@ namespace CL2CDebugTool
             Logger.LogTextWriter.GetInstance().OnLogging += OnLoggingHandle;
 
             cmbReturnMode.ItemsSource = new List<ReturnMode>() { ReturnMode.Limit, ReturnMode.Zero };
+            panelControl.IsEnabled = false;
         }
 
         private void OnLoggingHandle(object sender,string log)
@@ -43,6 +44,7 @@ namespace CL2CDebugTool
             }
             txtLog.AppendText(log);
             txtLog.AppendText(Environment.NewLine);
+            txtLog.ScrollToEnd();
             //txtLog.
         }
 
@@ -60,6 +62,7 @@ namespace CL2CDebugTool
         {
             _controller.ConnectToHost(txtAddr.Text);
             (sender as Control).IsEnabled = false;
+            panelControl.IsEnabled = true;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -71,7 +74,7 @@ namespace CL2CDebugTool
 
         private void btnRetZero_Click(object sender, RoutedEventArgs e)
         {
-            RetrunZeroDirection direction= radBack.IsChecked==true? RetrunZeroDirection.Backward : RetrunZeroDirection.Forward;
+            AxisDirection direction= radBack.IsChecked==true? AxisDirection.Backward : AxisDirection.Forward;
             ReturnMode mode = (ReturnMode)cmbReturnMode.SelectedItem;
             _controller.ReturnToZero(direction, mode);
         }
@@ -84,6 +87,56 @@ namespace CL2CDebugTool
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             _controller.Stop();
+        }
+
+        private void btnSetVel_Click(object sender, RoutedEventArgs e)
+        {
+            double val = double.Parse(txtVel.Text);
+            _controller.SetVel(val);
+        }
+
+        private void btnReverseMove_Click(object sender, RoutedEventArgs e)
+        {
+            double val = double.Parse(txtAbsVal.Text);
+            _controller.RelativeMove(-val);
+        }
+
+        private void btnForwardMove_Click(object sender, RoutedEventArgs e)
+        {
+            double val = double.Parse(txtAbsVal.Text);
+            _controller.RelativeMove(val);
+        }
+
+        private void btnSetLimit_Click(object sender, RoutedEventArgs e)
+        {
+            if(chbBack.IsChecked==true)
+            {
+                _controller.SetLimit(AxisDirection.Backward, true);
+            }
+            if (chbForward.IsChecked == true)
+            {
+                _controller.SetLimit(AxisDirection.Forward, true);
+            }
+        }
+
+        private void btnGetLimit_Click(object sender, RoutedEventArgs e)
+        {
+            bool enable1=false;
+            _controller.GetLimit(AxisDirection.Backward,ref enable1);
+            chbBack.IsChecked = enable1;
+
+            bool enable2 = false;
+            _controller.GetLimit(AxisDirection.Forward, ref enable2);
+            chbForward.IsChecked = enable2;
+        }
+
+        private void btnsSaveParam_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
