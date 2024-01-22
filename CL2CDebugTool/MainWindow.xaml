@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CL2CDebugTool"
         mc:Ignorable="d"
-        Title="雷赛导轨调试软件" Height="450" Width="800">
+        Title="雷赛导轨调试软件" Height="800" Width="1200">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -25,11 +25,17 @@
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             <Label Content="连接参数:" VerticalAlignment="Center" Margin="2"/>
-            <TextBox x:Name="txtAddr" Text="192.168.1.12:502" VerticalContentAlignment="Center" Grid.Column="1" Margin="2"/>
+            <TextBox x:Name="txtAddr" Text="127.0.0.1:502" VerticalContentAlignment="Center" Grid.Column="1" Margin="2"/>
             <Button x:Name="btnConnect" Click="btnConnect_Click" Grid.Column="2" Content="连接" Margin="2"/>
         </Grid>
         <GroupBox Header="设备状态" Grid.Row="1" Margin="5" Grid.RowSpan="1">
-            <DataGrid d:ItemsSource="{d:SampleData ItemCount=5}" />
+            <DataGrid x:Name="dgvStateItems" ItemsSource="{Binding StateItems}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="120" Header="Name" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Width="120" Header="State" Binding="{Binding State}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
         </GroupBox>
 
         <GroupBox Grid.Column="0" Grid.Row="2" Header="日志" >
