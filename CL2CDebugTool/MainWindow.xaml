@@ -29,7 +29,7 @@
             <Button x:Name="btnConnect" Click="btnConnect_Click" Grid.Column="2" Content="连接" Margin="2"/>
         </Grid>
         <GroupBox Header="设备状态" Grid.Row="1" Margin="5" Grid.RowSpan="1">
-            <DataGrid x:Name="dgvStateItems" ItemsSource="{Binding StateItems}" AutoGenerateColumns="False">
+            <DataGrid x:Name="dgvStateItems" ItemsSource="{Binding StateItems}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Width="120" Header="Name" Binding="{Binding Name}"/>
                     <DataGridTextColumn Width="120" Header="State" Binding="{Binding State}"/>

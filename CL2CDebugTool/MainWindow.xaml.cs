@@ -50,7 +50,7 @@ namespace CL2CDebugTool
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            Console.WriteLine($"Timer_Tick {Thread.CurrentThread.ManagedThreadId}");
+            //Console.WriteLine($"Timer_Tick {Thread.CurrentThread.ManagedThreadId}");
             if (chbAutoUpdate.IsChecked == true&& _controller.IsConnected)
             {
                 _controller.UpdateState();

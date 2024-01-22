@@ -71,7 +71,7 @@ namespace CL2CDebugTool
             _modbus.WriteSingleRegister(_slaveId,0x600A,GetNum(bArr));
             _modbus.WriteSingleRegister(_slaveId, 0x600f, 0x0064);
             _modbus.WriteSingleRegister(_slaveId, 0x6010, 0x001e);
-            _modbus.WriteSingleRegister(_slaveId, 0x6002, 0x20);
+            _modbus.WriteSingleRegister(_slaveId, 0x6002, 0x0020);
         }
 
         public void SetCurrentToZero()
@@ -142,7 +142,8 @@ namespace CL2CDebugTool
             var error = _modbus.ReadHoldingRegisters(_slaveId, 0x2203, 1).First();
             _stateItems[7].State = error.ToString("X");
             var curPos = _modbus.ReadHoldingRegisters(_slaveId, 0x602c, 2);
-            _stateItems[8].State = $"{ConvertToInt(curPos) / 10000.0}" ;
+            int pos = ConvertToInt(curPos);
+            _stateItems[8].State = $"{pos / 10000.0}" ;
             var vel=_modbus.ReadHoldingRegisters(_slaveId, 0x6023, 1);
             _stateItems[9].State = $"{vel[0] /100.0}";
         }
@@ -174,7 +175,7 @@ namespace CL2CDebugTool
         public static int ConvertToInt(ushort[] data)
         {
             int data0 = data[0];
-            return data0 << 16 + data[1];
+            return (data0 << 16) + data[1];
         }
 
         List<ushort> ConvertToUint16List(int data)
