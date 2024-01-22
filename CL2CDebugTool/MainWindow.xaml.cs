@@ -30,6 +30,20 @@ namespace CL2CDebugTool
             _timer.Tick += Timer_Tick;
             _timer.Start();
             Console.WriteLine($"MainWindow {Thread.CurrentThread.ManagedThreadId}");
+            Logger.LogTextWriter.GetInstance().OnLogging += OnLoggingHandle;
+
+            cmbReturnMode.ItemsSource = new List<ReturnMode>() { ReturnMode.Limit, ReturnMode.Zero };
+        }
+
+        private void OnLoggingHandle(object sender,string log)
+        {
+            if(txtLog.LineCount>1000)
+            {
+                txtLog.Clear();
+            }
+            txtLog.AppendText(log);
+            txtLog.AppendText(Environment.NewLine);
+            //txtLog.
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -52,6 +66,24 @@ namespace CL2CDebugTool
         {
             base.OnClosing(e);
             _controller.Dispose();
+            Logger.LogTextWriter.GetInstance().OnLogging -= OnLoggingHandle;
+        }
+
+        private void btnRetZero_Click(object sender, RoutedEventArgs e)
+        {
+            RetrunZeroDirection direction= radBack.IsChecked==true? RetrunZeroDirection.Backward : RetrunZeroDirection.Forward;
+            ReturnMode mode = (ReturnMode)cmbReturnMode.SelectedItem;
+            _controller.ReturnToZero(direction, mode);
+        }
+
+        private void btnRetCuruentZero_Click(object sender, RoutedEventArgs e)
+        {
+            _controller.SetCurrentToZero();
+        }
+
+        private void btnStop_Click(object sender, RoutedEventArgs e)
+        {
+            _controller.Stop();
         }
     }
 }
