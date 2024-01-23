@@ -64,11 +64,12 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>
                         <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
                     </Grid.RowDefinitions>
 
                     <Label Content="运行速度:" VerticalAlignment="Center"/>
                     <TextBox x:Name="txtVel" Grid.Column="1" Margin="2" VerticalAlignment="Center" Text="5"/>
-                    <Button x:Name="btnSetVel" Click="btnSetVel_Click" Content="设置" Margin="2" Grid.Column="2" VerticalAlignment="Center"/>
+                    <Button x:Name="btnSetVel" Click="btnSetVel_Click" Content="设置" Margin="2" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
 
                     <Label Content="相对移动:" Grid.Row="1" VerticalAlignment="Center"/>
                     <TextBox x:Name="txtAbsVal" Grid.Column="1"  Grid.Row="1" Margin="2" VerticalAlignment="Center" Text="1"/>
@@ -77,32 +78,35 @@
 
                     <Label Content="绝对移动:" Grid.Row="2" VerticalAlignment="Center"/>
                     <TextBox x:Name="txtAbs" Grid.Column="1"  Grid.Row="2" Margin="2" VerticalAlignment="Center" Text="0"/>
-                    <Button x:Name="btnAbsMove" Click="btnAbsMove_Click" Content="运行" Margin="2"  Grid.Row="2" Grid.Column="2" VerticalAlignment="Center"/>
+                    <Button x:Name="btnAbsMove" Click="btnAbsMove_Click" Content="运行" Margin="2"  Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
 
                 </Grid>
                 <GroupBox Header="限位状态:">
-                    <DataGrid ItemsSource="{Binding IOItems}" Height="120" AutoGenerateColumns="False" CanUserAddRows="False" HorizontalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <DataGrid.Columns>
-                        <DataGridTextColumn Width="60" Header="点位" Binding="{Binding Name}"/>
-                        <DataGridTemplateColumn   Width="120" Header="功能">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ComboBox ItemsSource="{Binding FunctionTypes}" SelectedValue="{Binding FunctionType}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn   Width="90" Header="极性">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ComboBox ItemsSource="{Binding PolartyTypes}" SelectedValue="{Binding PolartyType}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTextColumn Width="1*" Header="点位" Binding="{Binding State}"/>
-                    </DataGrid.Columns>
-                    </DataGrid>
+                    <StackPanel>
+                        <DataGrid ItemsSource="{Binding IOItems}" Height="120" AutoGenerateColumns="False" CanUserAddRows="False" HorizontalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <DataGrid.Columns>
+                            <DataGridTextColumn Width="60" Header="点位" Binding="{Binding Name}"/>
+                            <DataGridTemplateColumn   Width="120" Header="功能">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox ItemsSource="{Binding FunctionTypes}" SelectedValue="{Binding FunctionType}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn   Width="90" Header="极性">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox ItemsSource="{Binding PolartyTypes}" SelectedValue="{Binding PolartyType}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Width="1*" Header="点位" Binding="{Binding State}"/>
+                        </DataGrid.Columns>
+                        </DataGrid>
+                        <Button   Click="btnSetLimit_Click" Content="设置" Margin="0,2,0,2"  Grid.Row="3" Grid.Column="2" VerticalAlignment="Center"/>
+                    </StackPanel>
                 </GroupBox>
-                <Button   Click="btnSetLimit_Click" Content="设置" Margin="2"  Grid.Row="3" Grid.Column="2" VerticalAlignment="Center"/>
+                
                 <GroupBox Header="回零设置">
                     <Grid>
                         <Grid.ColumnDefinitions>

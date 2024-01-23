@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Configuration;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CL2CDebugTool
 {
@@ -38,6 +40,16 @@ namespace CL2CDebugTool
 
             cmbReturnMode.ItemsSource = new List<ReturnMode>() { ReturnMode.Limit, ReturnMode.Zero };
             panelControl.IsEnabled = false;
+            InitIP();
+        }
+
+        private void InitIP()
+        {
+            if(ConfigurationManager.AppSettings.AllKeys.Contains("IP"))
+            {
+                string ip = ConfigurationManager.AppSettings["IP"];
+                txtAddr.Text = ip;
+            }
         }
 
         private void OnLoggingHandle(object sender,string log)
@@ -72,6 +84,9 @@ namespace CL2CDebugTool
             _controller.ConnectToHost(txtAddr.Text);
             (sender as Control).IsEnabled = false;
             panelControl.IsEnabled = true;
+            Configuration cfa = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            cfa.AppSettings.Settings["IP"].Value = txtAddr.Text;
+            cfa.Save();
         }
 
         protected override void OnClosing(CancelEventArgs e)
