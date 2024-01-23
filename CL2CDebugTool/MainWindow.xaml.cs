@@ -121,14 +121,7 @@ namespace CL2CDebugTool
 
         private void btnSetLimit_Click(object sender, RoutedEventArgs e)
         {
-            if(chbBack.IsChecked==true)
-            {
-                _controller.SetLimit(AxisDirection.Backward, true);
-            }
-            if (chbForward.IsChecked == true)
-            {
-                _controller.SetLimit(AxisDirection.Forward, true);
-            }
+            _controller.SetLimit(_controller.IOItems.ToList());
         }
 
         private void btnGetLimit_Click(object sender, RoutedEventArgs e)

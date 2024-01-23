@@ -32,19 +32,23 @@ namespace CL2CDebugTool
         private TcpClient _tcpClient;
         private byte _slaveId = 1;
         private readonly ObservableCollection<StateItem> _stateItems=new ObservableCollection<StateItem>();
+        private readonly ObservableCollection<IOItem> _ioItems = new ObservableCollection<IOItem>();
 
         public CL2CController() 
         {
             _tcpClient = new TcpClient();
             List<string> names = new List<string>()
             {
-                "故障","使能","运行","无效","指令完成","路径完成","回零完成","当前报警","当前位置","当前速度"
+                "故障","使能","运行","无效","指令完成","路径完成","回零完成","当前报警","当前位置","当前速度","负限位","正限位"
             };
 
             foreach (string name in names)
             {
                 _stateItems.Add(new StateItem(name));
             }
+            _ioItems.Add(new IOItem() { Name = "dSl1" });
+            _ioItems.Add(new IOItem() { Name = "dSl2" });
+
         }
 
         public bool ConnectToHost(string ip)
@@ -61,6 +65,8 @@ namespace CL2CDebugTool
         public bool IsConnected => _tcpClient.Connected;
 
         public ObservableCollection<StateItem> StateItems => _stateItems;
+
+        public ObservableCollection<IOItem> IOItems => _ioItems;
 
         public void ReturnToZero(AxisDirection direction, ReturnMode mode)
         {
@@ -103,6 +109,16 @@ namespace CL2CDebugTool
             _modbus.WriteMultipleRegisters(_slaveId, 0x6201, ConvertToUint16List(tempPos).ToArray());
             //启动
             _modbus.WriteSingleRegister(_slaveId, 0x6002, 0x0010);
+        }
+
+        public void SetLimit(List<IOItem> ioItem)
+        {
+            ushort startAddr = 0x0145;
+            for (int i = 0; i < ioItem.Count; i++)
+            {
+                int val = ioItem[i].PolartyType == PolartyType.Open ? (int)ioItem[i].FunctionType : (int)ioItem[i].FunctionType + 0x80;
+                _modbus.WriteSingleRegister(_slaveId, (ushort)(startAddr + i * 2), (ushort)val);
+            }
         }
 
         public void SetLimit(AxisDirection direction,bool enable)
