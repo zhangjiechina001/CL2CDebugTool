@@ -98,7 +98,7 @@ namespace CL2CDebugTool
 
         private void btnRetZero_Click(object sender, RoutedEventArgs e)
         {
-            if(cmbReturnMode.SelectedIndex==-1)
+            if(cmbReturnMode.SelectedIndex>=0)
             {
                 AxisDirection direction = radBack.IsChecked == true ? AxisDirection.Backward : AxisDirection.Forward;
                 ReturnMode mode = (ReturnMode)cmbReturnMode.SelectedItem;
