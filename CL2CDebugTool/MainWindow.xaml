@@ -92,14 +92,14 @@
                                 <DataGridTemplateColumn   Width="120" Header="功能">
                                     <DataGridTemplateColumn.CellTemplate >
                                         <DataTemplate>
-                                            <ComboBox ItemsSource="{Binding FunctionTypes}" SelectedValue="{Binding FunctionType}"/>
+                                            <ComboBox ItemsSource="{Binding FunctionTypes}" SelectedItem="{Binding FunctionType,UpdateSourceTrigger=PropertyChanged}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                                 <DataGridTemplateColumn   Width="1*" Header="极性" >
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <ComboBox ItemsSource="{Binding PolartyTypes}" SelectedValue="{Binding PolartyType}"/>
+                                            <ComboBox ItemsSource="{Binding PolartyTypes}" SelectedItem="{Binding PolartyType,UpdateSourceTrigger=PropertyChanged}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
