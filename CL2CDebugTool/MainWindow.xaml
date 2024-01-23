@@ -4,12 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CL2CDebugTool"
+        xmlns:core="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="雷赛导轨调试软件" Height="800" Width="1200">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="350"/>
+            <ColumnDefinition Width="360"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="28"/>
@@ -51,7 +52,7 @@
                     </Grid.ColumnDefinitions>
                     <Button x:Name="chbEnable" Click="chbEnable_Click" Content="电机开" Grid.Column="0" Margin="3" VerticalAlignment="Center"/>
                     <Button x:Name="chbUnable" Click="chbUnable_Click" Content="电机关" Grid.Column="1" Margin="3" VerticalAlignment="Center"/>
-
+                    
                 </Grid>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -91,9 +92,31 @@
                         <CheckBox x:Name="chbBack" Content="负限位" Grid.Column="0" VerticalAlignment="Center"/>
                         <CheckBox x:Name="chbForward" Content="正限位" Grid.Column="1" VerticalAlignment="Center"/>
                     </Grid>
-                    <Button x:Name="btnSetLimit" Click="btnSetLimit_Click" Content="设置" Margin="2"  Grid.Row="3" Grid.Column="2" VerticalAlignment="Center"/>
+                    <Button x:Name="btnSetLimit" Content="设置" Margin="2"  Grid.Row="3" Grid.Column="2" VerticalAlignment="Center"/>
                     <Button  x:Name="btnGetLimit" Click="btnGetLimit_Click" Content="获取" Margin="2"  Grid.Row="3" Grid.Column="3" VerticalAlignment="Center"/>
                 </Grid>
+
+                <DataGrid ItemsSource="{Binding IOItems}" Height="120" AutoGenerateColumns="False" CanUserAddRows="False" HorizontalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="60" Header="点位" Binding="{Binding Name}"/>
+                        <DataGridTemplateColumn   Width="120" Header="功能">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox ItemsSource="{Binding FunctionTypes}" SelectedValue="{Binding FunctionType}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn   Width="90" Header="极性">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox ItemsSource="{Binding PolartyTypes}" SelectedValue="{Binding PolartyType}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Width="1*" Header="点位" Binding="{Binding State}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button   Click="btnSetLimit_Click" Content="设置" Margin="2"  Grid.Row="3" Grid.Column="2" VerticalAlignment="Center"/>
                 <GroupBox Header="回零设置">
                     <Grid>
                         <Grid.ColumnDefinitions>
