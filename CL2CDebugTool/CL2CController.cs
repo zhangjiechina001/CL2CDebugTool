@@ -39,7 +39,7 @@ namespace CL2CDebugTool
             _tcpClient = new TcpClient();
             List<string> names = new List<string>()
             {
-                "故障","使能","运行","无效","指令完成","路径完成","回零完成","当前报警","当前位置","当前速度","负限位","正限位"
+                "故障","使能","运行","无效","指令完成","路径完成","回零完成","当前报警","当前位置","当前速度","限位报警"
             };
 
             foreach (string name in names)
@@ -86,7 +86,7 @@ namespace CL2CDebugTool
 
         public void SetVel(double vel)
         {
-            _modbus.WriteSingleRegister(_slaveId, 0x6023, (ushort)(vel * 100));
+            _modbus.WriteSingleRegister(_slaveId, 0x6203, (ushort)(vel * 100));
         }
 
         public void RelativeMove(double relativeMove)
@@ -165,8 +165,11 @@ namespace CL2CDebugTool
             var curPos = _modbus.ReadHoldingRegisters(_slaveId, 0x602c, 2);
             int pos = ConvertToInt(curPos);
             _stateItems[8].State = $"{pos / 10000.0}" ;
-            var vel=_modbus.ReadHoldingRegisters(_slaveId, 0x6023, 1);
+            var vel=_modbus.ReadHoldingRegisters(_slaveId, 0x6203, 1);
             _stateItems[9].State = $"{vel[0] /100.0}";
+
+            var alarm = _modbus.ReadHoldingRegisters(_slaveId, 0x601d, 1).First();
+            _stateItems[10].State = alarm.ToString("X");
         }
 
         public static bool GetBit(ushort b, int bitNumber)

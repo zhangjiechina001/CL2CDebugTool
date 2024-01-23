@@ -18,6 +18,10 @@ namespace CL2CDebugTool
     /// </summary>
     public partial class MainWindow : Window
     {
+        //1.回零测试结果
+        //2.限位卡死
+        //3.丢步问题和到轨到原点有关系
+        //4.使用tcp设置导轨
         private readonly CL2CController _controller;
         private readonly DispatcherTimer _timer;
         public MainWindow()
@@ -45,7 +49,6 @@ namespace CL2CDebugTool
             txtLog.AppendText(log);
             txtLog.AppendText(Environment.NewLine);
             txtLog.ScrollToEnd();
-            //txtLog.
         }
 
         private void Timer_Tick(object sender, EventArgs e)
