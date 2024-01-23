@@ -38,6 +38,7 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Width="240" Header="Name" Binding="{Binding Name}"/>
                     <DataGridTextColumn Width="240" Header="State" Binding="{Binding State}"/>
+                    <DataGridTextColumn Width="1*" Header="State" Binding="{Binding Annotation}"/>
                 </DataGrid.Columns>
             </DataGrid>
 

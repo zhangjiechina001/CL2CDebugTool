@@ -13,9 +13,10 @@ namespace CL2CDebugTool.Item
     {
         public StateItem() { }
 
-        public StateItem(string name)
+        public StateItem(string name,string annotation)
         {
             Name = name;
+            Annotation = annotation;
         }
 
         public string Name { get; set; } = "";
@@ -27,6 +28,16 @@ namespace CL2CDebugTool.Item
             set
             {
                 SetProperty(ref _state, value);
+            }
+        }
+
+        private string _annotation = "";
+        public string Annotation
+        {
+            get { return _annotation; }
+            set
+            {
+                SetProperty(ref _annotation, value);
             }
         }
     }

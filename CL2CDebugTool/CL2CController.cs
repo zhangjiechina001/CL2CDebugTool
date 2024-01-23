@@ -37,17 +37,29 @@ namespace CL2CDebugTool
         public CL2CController() 
         {
             _tcpClient = new TcpClient();
-            List<string> names = new List<string>()
+            List<StateItem> items = new List<StateItem>()
             {
-                "故障","使能","运行","无效","指令完成","路径完成","回零完成","当前报警","当前位置","当前速度","限位报警","正限位","负限位"
+                new StateItem("故障",""),
+                new StateItem("使能",""),
+                new StateItem("运行",""),
+                new StateItem("无效",""),
+                new StateItem("指令完成",""),
+                new StateItem("路径完成",""),
+                new StateItem("回零完成",""),
+                new StateItem("当前报警","为0时无报警"),
+                new StateItem("当前位置",""),
+                new StateItem("当前速度",""),
+                new StateItem("限位报警","0x100:限位故障 0x102:超程 0x20*:路径*限位故障"),
+                new StateItem("DO1","0x25:正向限位 0x26:反向限位 常闭 0xA5 0xA6"),
+                new StateItem("DO2","0x25:正向限位 0x26:反向限位 常闭 0xA5 0xA6"),
             };
 
-            foreach (string name in names)
+            foreach(var name in items)
             {
-                _stateItems.Add(new StateItem(name));
+                _stateItems.Add(name);
             }
-            _ioItems.Add(new IOItem() { Name = "dSl1" });
-            _ioItems.Add(new IOItem() { Name = "dSl2" });
+            _ioItems.Add(new IOItem() { Name = "DO0" });
+            _ioItems.Add(new IOItem() { Name = "DO1" });
 
         }
 
@@ -181,9 +193,9 @@ namespace CL2CDebugTool
             var alarm = _modbus.ReadHoldingRegisters(_slaveId, 0x601d, 1).First();
             _stateItems[10].State = alarm.ToString("X");
 
-            var limits=_modbus.ReadHoldingRegisters(_slaveId, 0x0145,2);
+            var limits=_modbus.ReadHoldingRegisters(_slaveId, 0x0145,3);
             _stateItems[11].State = $"{limits[0].ToString("X")}";
-            _stateItems[12].State = $"{limits[1].ToString("X")}";
+            _stateItems[12].State = $"{limits[2].ToString("X")}";
         }
 
         public static bool GetBit(ushort b, int bitNumber)
