@@ -25,7 +25,7 @@
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             <Label Content="连接参数:" VerticalAlignment="Center" Margin="2"/>
-            <TextBox x:Name="txtAddr" Text="127.0.0.1:502" VerticalContentAlignment="Center" Grid.Column="1" Margin="2"/>
+            <TextBox x:Name="txtAddr" Text="192.168.1.101:503" VerticalContentAlignment="Center" Grid.Column="1" Margin="2"/>
             <Button x:Name="btnConnect" Click="btnConnect_Click" Grid.Column="2" Content="连接" Margin="2"/>
             <CheckBox x:Name="chbAutoUpdate" Grid.Column="3" Content="自动刷新" VerticalAlignment="Center"/>
         </Grid>

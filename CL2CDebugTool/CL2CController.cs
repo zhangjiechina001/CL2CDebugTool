@@ -120,7 +120,7 @@ namespace CL2CDebugTool
             int value = direction == AxisDirection.Backward ? 0x25 : 0x26;
             ushort writeVale = (ushort)(enable ? value : (value + 0x80));
             Console.WriteLine($"limitAddr:{limitAddr} writeVale:{writeVale}");
-            enable=(_modbus.ReadHoldingRegisters(_slaveId, limitAddr, writeVale).First()==value);
+            enable=(_modbus.ReadHoldingRegisters(_slaveId, limitAddr, 1).First()==value);
         }
 
         public void SetServorEnable(bool enable)
