@@ -83,9 +83,16 @@ namespace CL2CDebugTool
 
         private void btnRetZero_Click(object sender, RoutedEventArgs e)
         {
-            AxisDirection direction= radBack.IsChecked==true? AxisDirection.Backward : AxisDirection.Forward;
-            ReturnMode mode = (ReturnMode)cmbReturnMode.SelectedItem;
-            _controller.ReturnToZero(direction, mode);
+            if(cmbReturnMode.SelectedIndex==-1)
+            {
+                AxisDirection direction = radBack.IsChecked == true ? AxisDirection.Backward : AxisDirection.Forward;
+                ReturnMode mode = (ReturnMode)cmbReturnMode.SelectedItem;
+                _controller.ReturnToZero(direction, mode);
+            }
+            else
+            {
+                MessageBox.Show("请选择回零类型!");
+            }
         }
 
         private void btnRetCuruentZero_Click(object sender, RoutedEventArgs e)
@@ -127,25 +134,14 @@ namespace CL2CDebugTool
             _controller.SetLimit(_controller.IOItems.ToList());
         }
 
-        private void btnGetLimit_Click(object sender, RoutedEventArgs e)
-        {
-            bool enable1=false;
-            _controller.GetLimit(AxisDirection.Backward,ref enable1);
-            chbBack.IsChecked = enable1;
-
-            bool enable2 = false;
-            _controller.GetLimit(AxisDirection.Forward, ref enable2);
-            chbForward.IsChecked = enable2;
-        }
-
         private void btnsSaveParam_Click(object sender, RoutedEventArgs e)
         {
-
+            _controller.SaveParam();
         }
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-
+            _controller.Reset();
         }
 
         private void chbEnable_Click(object sender, RoutedEventArgs e)
