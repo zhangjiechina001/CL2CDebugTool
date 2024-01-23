@@ -67,7 +67,6 @@ namespace CL2CDebugTool
             bool[] bArr = new bool[7];
             bArr[0] = direction == AxisDirection.Forward;
             bArr[2] = mode == ReturnMode.Zero;
-            Convert.ToUInt16(bArr);
             _modbus.WriteSingleRegister(_slaveId,0x600A,GetNum(bArr));
             _modbus.WriteSingleRegister(_slaveId, 0x600f, 0x0064);
             _modbus.WriteSingleRegister(_slaveId, 0x6010, 0x001e);
@@ -122,6 +121,12 @@ namespace CL2CDebugTool
             ushort writeVale = (ushort)(enable ? value : (value + 0x80));
             Console.WriteLine($"limitAddr:{limitAddr} writeVale:{writeVale}");
             enable=(_modbus.ReadHoldingRegisters(_slaveId, limitAddr, writeVale).First()==value);
+        }
+
+        public void SetServorEnable(bool enable)
+        {
+            ushort val = (ushort)(enable ? 1 : 0);
+            _modbus.WriteSingleRegister(_slaveId, 0x000f, val);
         }
 
 

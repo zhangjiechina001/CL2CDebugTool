@@ -50,11 +50,17 @@ namespace CL2CDebugTool
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            //Console.WriteLine($"Timer_Tick {Thread.CurrentThread.ManagedThreadId}");
-            if (chbAutoUpdate.IsChecked == true&& _controller.IsConnected)
+            try
             {
-                _controller.UpdateState();
-                dgvStateItems.InvalidateVisual();
+                if (chbAutoUpdate.IsChecked == true && _controller.IsConnected)
+                {
+                    _controller.UpdateState();
+                    dgvStateItems.InvalidateVisual();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"数据更新失败{ex.Message}");
             }
         }
 
@@ -107,6 +113,12 @@ namespace CL2CDebugTool
             _controller.RelativeMove(val);
         }
 
+        private void btnAbsMove_Click(object sender, RoutedEventArgs e)
+        {
+            double val = double.Parse(txtAbs.Text);
+            _controller.AbsoluteMove(val);
+        }
+
         private void btnSetLimit_Click(object sender, RoutedEventArgs e)
         {
             if(chbBack.IsChecked==true)
@@ -138,6 +150,16 @@ namespace CL2CDebugTool
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void chbEnable_Click(object sender, RoutedEventArgs e)
+        {
+            _controller.SetServorEnable(true);
+        }
+
+        private void chbUnable_Click(object sender, RoutedEventArgs e)
+        {
+            _controller.SetServorEnable(false);
         }
     }
 }
