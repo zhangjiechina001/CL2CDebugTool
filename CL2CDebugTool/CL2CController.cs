@@ -46,7 +46,7 @@ namespace CL2CDebugTool
                 new StateItem("指令完成",""),
                 new StateItem("路径完成",""),
                 new StateItem("回零完成",""),
-                new StateItem("当前报警","为0时无报警"),
+                new StateItem("当前报警","0x01:过流 0x02:过压 0x40:电流采样回路故障 0x80:锁轴 0x200:EEPROM 0x100:参数自整定故障"),
                 new StateItem("当前位置",""),
                 new StateItem("当前速度",""),
                 new StateItem("限位报警","0x100:限位故障 0x102:超程 0x20*:路径*限位故障"),
