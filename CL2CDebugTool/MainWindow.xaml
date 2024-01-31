@@ -26,12 +26,14 @@
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             <Label Content="连接参数:" VerticalAlignment="Center" Margin="2"/>
             <TextBox x:Name="txtAddr" Text="192.168.1.101:503" VerticalContentAlignment="Center" Grid.Column="1" Margin="2"/>
             <Button x:Name="btnConnect" Click="btnConnect_Click" Grid.Column="2" Content="连接" Margin="2"/>
-            <CheckBox x:Name="chbAutoUpdate" Grid.Column="3" Content="自动刷新" VerticalAlignment="Center"/>
+            <Button x:Name="btnDisConnect" Click="btnDisConnect_Click"  Grid.Column="3" Content="断开" Margin="2"/>
+            <CheckBox x:Name="chbAutoUpdate" Grid.Column="4" Content="自动刷新" VerticalAlignment="Center"/>
         </Grid>
         <GroupBox Header="设备状态" Grid.Row="1" Margin="5" Grid.RowSpan="1" HorizontalContentAlignment="Left" >
             <DataGrid x:Name="dgvStateItems" ItemsSource="{Binding StateItems}" AutoGenerateColumns="False" CanUserAddRows="False">

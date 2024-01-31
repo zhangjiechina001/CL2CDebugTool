@@ -89,6 +89,13 @@ namespace CL2CDebugTool
             cfa.Save();
         }
 
+        private void btnDisConnect_Click(object sender, RoutedEventArgs e)
+        {
+            _controller.DisConnectFromHost();
+            btnConnect.IsEnabled = true;
+            chbAutoUpdate.IsChecked = false;
+        }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);

@@ -36,7 +36,6 @@ namespace CL2CDebugTool
 
         public CL2CController() 
         {
-            _tcpClient = new TcpClient();
             List<StateItem> items = new List<StateItem>()
             {
                 new StateItem("故障",""),
@@ -67,11 +66,20 @@ namespace CL2CDebugTool
         {
             var host = IPAddress.Parse(ip.Split(":")[0]);
             int port = int.Parse(ip.Split(":")[1]);
-
+            _tcpClient = new TcpClient();
             _tcpClient.Connect(host, port);
             var factory = new ModbusFactory();
             _modbus = factory.CreateMaster(_tcpClient);
             return true;
+        }
+
+        public void DisConnectFromHost()
+        {
+            if(_tcpClient != null )
+            {
+                _tcpClient.Close();
+                _modbus.Dispose();
+            }
         }
 
         public bool IsConnected => _tcpClient.Connected;
