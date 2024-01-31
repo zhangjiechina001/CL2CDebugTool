@@ -161,12 +161,12 @@ namespace CL2CDebugTool
 
         private void chbEnable_Click(object sender, RoutedEventArgs e)
         {
-            _controller.SetServorEnable(true);
+            _controller.SetMotorEnable(true);
         }
 
         private void chbUnable_Click(object sender, RoutedEventArgs e)
         {
-            _controller.SetServorEnable(false);
+            _controller.SetMotorEnable(false);
         }
     }
 }

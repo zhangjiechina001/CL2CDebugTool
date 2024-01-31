@@ -133,25 +133,7 @@ namespace CL2CDebugTool
             }
         }
 
-        public void SetLimit(AxisDirection direction,bool enable)
-        {
-            ushort limitAddr = (ushort)(direction == AxisDirection.Backward ? 0x145 : 0x147);
-            int value = direction == AxisDirection.Backward ? 0x25 : 0x26;
-            ushort writeVale = (ushort)(enable ? value : (value + 0x80));
-            Console.WriteLine($"limitAddr:{limitAddr} writeVale:{writeVale}");
-            _modbus.WriteSingleRegister(_slaveId,limitAddr, writeVale);
-        }
-
-        public void GetLimit(AxisDirection direction,ref bool enable)
-        {
-            ushort limitAddr = (ushort)(direction == AxisDirection.Backward ? 0x145 : 0x147);
-            int value = direction == AxisDirection.Backward ? 0x25 : 0x26;
-            ushort writeVale = (ushort)(enable ? value : (value + 0x80));
-            Console.WriteLine($"limitAddr:{limitAddr} writeVale:{writeVale}");
-            enable=(_modbus.ReadHoldingRegisters(_slaveId, limitAddr, 1).First()==value);
-        }
-
-        public void SetServorEnable(bool enable)
+        public void SetMotorEnable(bool enable)
         {
             ushort val = (ushort)(enable ? 1 : 0);
             _modbus.WriteSingleRegister(_slaveId, 0x000f, val);
@@ -184,9 +166,11 @@ namespace CL2CDebugTool
             }
             var error = _modbus.ReadHoldingRegisters(_slaveId, 0x2203, 1).First();
             _stateItems[7].State = error.ToString("X");
+
             var curPos = _modbus.ReadHoldingRegisters(_slaveId, 0x602c, 2);
             int pos = ConvertToInt(curPos);
             _stateItems[8].State = $"{pos / 10000.0}" ;
+
             var vel=_modbus.ReadHoldingRegisters(_slaveId, 0x6203, 1);
             _stateItems[9].State = $"{vel[0] /100.0}";
 
