@@ -40,6 +40,8 @@ namespace CL2CDebugTool
 
             cmbReturnMode.ItemsSource = new List<ReturnMode>() { ReturnMode.Limit, ReturnMode.Zero };
             panelControl.IsEnabled = false;
+            cmbDirection.SelectedIndex = 0;
+            cmbReturnMode.SelectedIndex = 0;
             InitIP();
         }
 
@@ -174,6 +176,18 @@ namespace CL2CDebugTool
         private void chbUnable_Click(object sender, RoutedEventArgs e)
         {
             _controller.SetMotorEnable(false);
+        }
+
+        private void btnSetDirection_Click(object sender, RoutedEventArgs e)
+        {
+            AxisDirectionType dt = cmbDirection.Text == "正向" ? AxisDirectionType.AxisForward : AxisDirectionType.AxisReverse;
+            _controller.SetAxisDriection(dt);
+        }
+
+        private void txtSetMaxElec_Click(object sender, RoutedEventArgs e)
+        {
+            int maxElec=int.Parse(txtMaxElec.Text);
+            _controller.SetMaxElectricity(maxElec);
         }
     }
 }

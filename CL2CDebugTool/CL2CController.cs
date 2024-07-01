@@ -26,6 +26,12 @@ namespace CL2CDebugTool
         Backward
     }
 
+    public enum AxisDirectionType
+    {
+        AxisForward = 1,//正向
+        AxisReverse = 2//反向
+    }
+
     public class CL2CController : IDisposable
     {
         private IModbusMaster _modbus;
@@ -51,6 +57,8 @@ namespace CL2CDebugTool
                 new StateItem("限位报警","0x100:限位故障 0x102:超程 0x20*:路径*限位故障"),
                 new StateItem("DO1","0x25:正向限位 0x26:反向限位 常闭 0xA5 0xA6"),
                 new StateItem("DO2","0x25:正向限位 0x26:反向限位 常闭 0xA5 0xA6"),
+                new StateItem("峰值电流","503:0-30 507:0-70,单位0.1A"),
+                new StateItem("电机运行方向","0:正方向 1:负方向")
             };
 
             foreach(var name in items)
@@ -147,6 +155,16 @@ namespace CL2CDebugTool
             _modbus.WriteSingleRegister(_slaveId, 0x000f, val);
         }
 
+        public void SetMaxElectricity(int electricity)
+        {
+            _modbus.WriteSingleRegister(_slaveId, 0x0191, (ushort)electricity);
+        }
+
+        public void SetAxisDriection(AxisDirectionType axisType)
+        {
+            int val = axisType == AxisDirectionType.AxisForward ? 0 : 1;
+            _modbus.WriteSingleRegister(_slaveId,0x0007, (ushort)val);
+        }
 
         public void Stop()
         {
@@ -188,6 +206,12 @@ namespace CL2CDebugTool
             var limits=_modbus.ReadHoldingRegisters(_slaveId, 0x0145,3);
             _stateItems[11].State = $"{limits[0].ToString("X")}";
             _stateItems[12].State = $"{limits[2].ToString("X")}";
+
+            var maxElec = _modbus.ReadHoldingRegisters(_slaveId, 0x0191, 1);
+            _stateItems[13].State = maxElec[0].ToString();
+
+            var axisDir = _modbus.ReadHoldingRegisters(_slaveId, 0x0007, 1);
+            _stateItems[14].State = axisDir[0].ToString();
         }
 
         public static bool GetBit(ushort b, int bitNumber)
